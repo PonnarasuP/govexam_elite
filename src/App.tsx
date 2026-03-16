@@ -23,7 +23,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { fetchLatestExamInfo, chatWithAssistant, fetchLiveNotifications, analyzeUrlContent } from './services/geminiService';
+import { fetchLatestExamInfo, chatWithAssistant, fetchScrapedNotifications as fetchLiveNotifications, analyzeUrlContent } from './services/dataService';
 import { cn } from './lib/utils';
 import AdBanner from './components/AdBanner';
 import { PRIVACY_POLICY, TERMS_OF_SERVICE, AD_DISCLOSURE } from './legalContent';
@@ -34,16 +34,16 @@ const translations = {
     intelligence: 'Intelligence',
     liveFeed: 'Live Feed',
     vault: 'Vault',
-    aiStrategist: 'AI Strategist',
+    aiStrategist: 'Intelligence Feed',
     masterFuture: 'Master Your Future Career',
-    platformDesc: 'The most advanced intelligence platform for TNPSC and UPSC aspirants. Real-time data, AI-driven strategies, and elite resources.',
-    initializeAi: 'Initialize AI Strategist',
+    platformDesc: 'The most advanced live data platform for TNPSC and UPSC aspirants. Real-time official notifications and elite resources.',
+    initializeAi: 'View Live Feed',
     viewVault: 'View Vault',
     marketTrends: 'Market Trends',
     competitionRise: 'Competition Rise',
-    dailyStrategist: 'The Daily Strategist',
+    dailyStrategist: 'The Live Strategist',
     lastUpdated: 'Last Updated',
-    synthesizing: 'Synthesizing Original Content...',
+    synthesizing: 'Fetching Live Intelligence...',
     criticalAlerts: 'Critical Alerts',
     verifiedContent: 'Verified Content',
     verifiedDesc: 'All information on this platform is synthesized from official government portals and verified by our AI Intelligence engine.',
@@ -89,16 +89,16 @@ const translations = {
     intelligence: 'புலனாய்வு',
     liveFeed: 'நேரடி ஊட்டம்',
     vault: 'பெட்டகம்',
-    aiStrategist: 'AI உத்தியாளர்',
+    aiStrategist: 'புலனாய்வு ஊட்டம்',
     masterFuture: 'உங்கள் எதிர்கால வாழ்க்கையை மாஸ்டர் செய்யுங்கள்',
-    platformDesc: 'TNPSC மற்றும் UPSC ஆர்வலர்களுக்கான மிகவும் மேம்பட்ட புலனாய்வு தளம். நிகழ்நேர தரவு, AI-உந்துதல் உத்திகள் மற்றும் உயரடுக்கு வளங்கள்.',
-    initializeAi: 'AI உத்தியாளரைத் தொடங்குங்கள்',
+    platformDesc: 'TNPSC மற்றும் UPSC ஆர்வலர்களுக்கான மிகவும் மேம்பட்ட நேரடி தரவு தளம். நிகழ்நேர அதிகாரப்பூர்வ அறிவிப்புகள் மற்றும் உயரடுக்கு வளங்கள்.',
+    initializeAi: 'நேரடி ஊட்டத்தைப் பார்க்கவும்',
     viewVault: 'பெட்டகத்தைப் பார்க்கவும்',
     marketTrends: 'சந்தை போக்குகள்',
     competitionRise: 'போட்டி உயர்வு',
-    dailyStrategist: 'தினசரி உத்தியாளர்',
+    dailyStrategist: 'நேரடி உத்தியாளர்',
     lastUpdated: 'கடைசியாக புதுப்பிக்கப்பட்டது',
-    synthesizing: 'அசல் உள்ளடக்கத்தை உருவாக்குகிறது...',
+    synthesizing: 'நேரடித் தரவைப் பெறுகிறது...',
     criticalAlerts: 'முக்கிய எச்சரிக்கைகள்',
     verifiedContent: 'சரிபார்க்கப்பட்ட உள்ளடக்கம்',
     verifiedDesc: 'இந்தத் தளத்தில் உள்ள அனைத்துத் தகவல்களும் அதிகாரப்பூர்வ அரசாங்க இணையதளங்களில் இருந்து தொகுக்கப்பட்டு எமது AI புலனாய்வு இயந்திரத்தால் சரிபார்க்கப்படுகின்றன.',
@@ -195,12 +195,16 @@ export default function App() {
       setLoadingNotifications(true);
       
       try {
-        const [info, notifications] = await Promise.all([
-          fetchLatestExamInfo("Detailed analysis of TNPSC and UPSC 2024-2025 exam trends and notifications", language),
-          fetchLiveNotifications(language)
-        ]);
+        // Fetch once and reuse
+        const notifications = await fetchLiveNotifications(language);
         
-        setNews(info);
+        // Generate report from the same data
+        let report = language === 'ta' ? "### சமீபத்திய தேர்வு செய்திகள்\n\n" : "### Latest Exam Intelligence\n\n";
+        notifications.slice(0, 5).forEach(n => {
+          report += `- **${n.source}**: ${n.title} (${n.date})\n  [${language === 'ta' ? 'மேலும் அறிய' : 'Read More'}](${n.link})\n\n`;
+        });
+
+        setNews(report);
         setLiveNotifications(notifications);
       } catch (error) {
         console.error("Critical error loading initial data:", error);
