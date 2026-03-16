@@ -1,7 +1,3 @@
-import { GoogleGenAI, Type } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
 export interface ExamInfo {
   title: string;
   date?: string;
@@ -10,22 +6,23 @@ export interface ExamInfo {
   summary: string;
 }
 
+const callApi = async (action: string, payload: any) => {
+  const response = await fetch('/api/gemini', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, payload }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'API call failed');
+  }
+  return response.json();
+};
+
 export const fetchLatestExamInfo = async (query: string): Promise<string> => {
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `Generate a comprehensive, high-quality editorial report for government exam preparation based on this query: ${query}. 
-      Focus on TNPSC, UPSC, and SSC. 
-      Synthesize the information into original content. 
-      Include sections like 'Latest Notifications', 'Strategic Analysis', and 'Expert Insights'. 
-      Provide relevant links to official sources or detailed news articles for every major point. 
-      Do not copy-paste. Ensure the tone is professional and premium.`,
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
-    });
-
-    return response.text || "No information found.";
+    const data = await callApi('fetchLatestExamInfo', { query });
+    return data.text || "No information found.";
   } catch (error) {
     console.error("Error fetching exam info:", error);
     return "Failed to fetch information. Please try again later.";
@@ -34,47 +31,18 @@ export const fetchLatestExamInfo = async (query: string): Promise<string> => {
 
 export const fetchLiveNotifications = async () => {
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: "Generate 4-5 real-time, high-priority notifications for TNPSC, UPSC, and SSC exams as of today. For each notification, provide: 1. Title, 2. Time (e.g., '2 hours ago'), 3. Category (Result, Admit Card, Alert, Scheme), 4. A detailed 'Complete Story' (2-3 paragraphs) that explains everything a student needs to know. Return this as a JSON array.",
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              title: { type: Type.STRING },
-              time: { type: Type.STRING },
-              type: { type: Type.STRING },
-              content: { type: Type.STRING },
-              color: { type: Type.STRING, description: "Tailwind border and text color classes, e.g., 'border-emerald-500/20 text-emerald-400'" }
-            },
-            required: ["title", "time", "type", "content", "color"]
-          }
-        },
-        tools: [{ googleSearch: {} }],
-      },
-    });
-    return JSON.parse(response.text);
+    const data = await callApi('fetchLiveNotifications', {});
+    return data.data || [];
   } catch (error) {
     console.error("Error fetching live notifications:", error);
     return [];
   }
 };
 
-export const chatWithAssistant = async (message: string, history: { role: 'user' | 'model', parts: { text: string }[] }[]) => {
+export const chatWithAssistant = async (message: string, history: any[]) => {
   try {
-    const chat = ai.chats.create({
-      model: "gemini-3-flash-preview",
-      config: {
-        systemInstruction: "You are an expert government exam consultant for TNPSC, UPSC, and other Indian competitive exams. Use Google Search to provide the most accurate and up-to-date information on exam dates, syllabus, notifications, and current affairs. Always cite sources and provide links if available. Rewrite all information in your own words to ensure originality and high editorial quality.",
-        tools: [{ googleSearch: {} }],
-      },
-    });
-
-    const response = await chat.sendMessage({ message });
-    return response.text;
+    const data = await callApi('chatWithAssistant', { message, history });
+    return data.text;
   } catch (error) {
     console.error("Chat error:", error);
     return "I'm having trouble connecting right now. Please try again.";
@@ -83,23 +51,8 @@ export const chatWithAssistant = async (message: string, history: { role: 'user'
 
 export const analyzeUrlContent = async (url: string): Promise<string> => {
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `You are an elite research assistant. Pull the COMPLETE story and all relevant details from this URL: ${url}. 
-      Synthesize it into a comprehensive, long-form editorial article suitable for a premium exam preparation site. 
-      Include:
-      1. A detailed summary of the main event/news.
-      2. Key dates, eligibility criteria, or syllabus changes mentioned.
-      3. Strategic implications for students.
-      4. Step-by-step instructions if it's a notification or application guide.
-      
-      Rewrite everything to be 100% original. Do not use placeholders. If the URL is a PDF or official notice, extract every critical detail.`,
-      config: {
-        tools: [{ urlContext: {} }],
-      },
-    });
-
-    return response.text || "Could not analyze the content.";
+    const data = await callApi('analyzeUrlContent', { url });
+    return data.text || "Could not analyze the content.";
   } catch (error) {
     console.error("URL Analysis error:", error);
     return "Failed to fetch content from the link. The source might be restricted.";
