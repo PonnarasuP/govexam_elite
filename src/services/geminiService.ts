@@ -3,6 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 const getAi = () => {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
+    console.error("CRITICAL: GEMINI_API_KEY is missing from the environment.");
     throw new Error("GEMINI_API_KEY is not defined.");
   }
   return new GoogleGenAI({ apiKey });

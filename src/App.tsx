@@ -23,7 +23,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { fetchLatestExamInfo, chatWithAssistant } from './services/geminiService';
+import { fetchLatestExamInfo, chatWithAssistant, fetchLiveNotifications, analyzeUrlContent } from './services/geminiService';
 import { cn } from './lib/utils';
 import AdBanner from './components/AdBanner';
 import { PRIVACY_POLICY, TERMS_OF_SERVICE, AD_DISCLOSURE } from './legalContent';
@@ -194,15 +194,20 @@ export default function App() {
       setLoadingNews(true);
       setLoadingNotifications(true);
       
-      const [info, notifications] = await Promise.all([
-        fetchLatestExamInfo("Detailed analysis of TNPSC and UPSC 2024-2025 exam trends and notifications", language),
-        import('./services/geminiService').then(m => m.fetchLiveNotifications(language))
-      ]);
-      
-      setNews(info);
-      setLiveNotifications(notifications);
-      setLoadingNews(false);
-      setLoadingNotifications(false);
+      try {
+        const [info, notifications] = await Promise.all([
+          fetchLatestExamInfo("Detailed analysis of TNPSC and UPSC 2024-2025 exam trends and notifications", language),
+          fetchLiveNotifications(language)
+        ]);
+        
+        setNews(info);
+        setLiveNotifications(notifications);
+      } catch (error) {
+        console.error("Critical error loading initial data:", error);
+      } finally {
+        setLoadingNews(false);
+        setLoadingNotifications(false);
+      }
     };
     loadInitialData();
   }, [language]);
@@ -212,8 +217,6 @@ export default function App() {
     setSelectedItem({ type: 'link', data: { url, content: '' } });
     setAnalyzingUrl(true);
     
-    // Use the analyzeUrlContent service
-    const { analyzeUrlContent } = await import('./services/geminiService');
     const content = await analyzeUrlContent(url, language);
     
     setSelectedItem({ type: 'link', data: { url, content } });
