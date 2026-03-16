@@ -1,15 +1,31 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let aiInstance: any = null;
+
+function getAi() {
+  if (!aiInstance) {
+    const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
+    console.log(`[API] API Key available: ${!!apiKey}`);
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY or API_KEY is not defined in the environment.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+}
 
 export default async function handler(req: any, res: any) {
+  console.log(`[API] Request received: ${req.method} ${req.url}`);
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { action, payload } = req.body;
+  console.log(`[API] Action: ${action}`, payload);
 
   try {
+    const ai = getAi();
     switch (action) {
       case 'fetchLatestExamInfo': {
         const response = await ai.models.generateContent({
@@ -89,7 +105,14 @@ export default async function handler(req: any, res: any) {
         return res.status(400).json({ error: 'Invalid action' });
     }
   } catch (error: any) {
-    console.error("Gemini API Error:", error);
-    return res.status(500).json({ error: error.message || 'Internal Server Error' });
+    console.error("[API] Gemini API Error:", error);
+    // Log the full error object for debugging
+    if (error.response) {
+      console.error("[API] Error Response:", JSON.stringify(error.response, null, 2));
+    }
+    return res.status(500).json({ 
+      error: error.message || 'Internal Server Error',
+      details: error.stack
+    });
   }
 }
