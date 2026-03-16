@@ -28,14 +28,119 @@ import { cn } from './lib/utils';
 import AdBanner from './components/AdBanner';
 import { PRIVACY_POLICY, TERMS_OF_SERVICE, AD_DISCLOSURE } from './legalContent';
 
-const examTrendData = [
-  { name: 'Jan', applicants: 4000, difficulty: 65 },
-  { name: 'Feb', applicants: 3000, difficulty: 70 },
-  { name: 'Mar', applicants: 2000, difficulty: 75 },
-  { name: 'Apr', applicants: 2780, difficulty: 80 },
-  { name: 'May', applicants: 1890, difficulty: 85 },
-  { name: 'Jun', applicants: 2390, difficulty: 90 },
-];
+
+const translations = {
+  en: {
+    intelligence: 'Intelligence',
+    liveFeed: 'Live Feed',
+    vault: 'Vault',
+    aiStrategist: 'AI Strategist',
+    masterFuture: 'Master Your Future Career',
+    platformDesc: 'The most advanced intelligence platform for TNPSC and UPSC aspirants. Real-time data, AI-driven strategies, and elite resources.',
+    initializeAi: 'Initialize AI Strategist',
+    viewVault: 'View Vault',
+    marketTrends: 'Market Trends',
+    competitionRise: 'Competition Rise',
+    dailyStrategist: 'The Daily Strategist',
+    lastUpdated: 'Last Updated',
+    synthesizing: 'Synthesizing Original Content...',
+    criticalAlerts: 'Critical Alerts',
+    verifiedContent: 'Verified Content',
+    verifiedDesc: 'All information on this platform is synthesized from official government portals and verified by our AI Intelligence engine.',
+    systemOnline: 'System Online',
+    strategizing: 'Strategizing...',
+    chatPlaceholder: 'Describe your exam goals or ask for a strategy...',
+    liveIntelligence: 'Live Intelligence',
+    realTimeFeed: 'Real-time Feed',
+    noAlerts: 'No live alerts at this moment',
+    accessIntelligence: 'Access Intelligence',
+    globalAccess: 'Global Access',
+    intelligenceDashboard: 'Intelligence Dashboard',
+    liveExamFeed: 'Live Exam Feed',
+    studyVault: 'Study Vault',
+    premiumExamHub: 'Premium Exam Hub',
+    latestNotifications: 'Latest Notifications',
+    strategicAnalysis: 'Strategic Analysis',
+    expertInsights: 'Expert Insights',
+    welcome: 'Welcome to the Premium Exam Hub. I am your AI strategist. How can I help you optimize your preparation today?',
+    premiumAccess: 'Premium Access Active',
+    intelligencePlatform: 'Intelligence Platform',
+    reportTitle: 'Live Intelligence Report',
+    source: 'Source',
+    openOriginal: 'Open Original Source',
+    navigation: 'Navigation',
+    legal: 'Legal',
+    rights: 'All Rights Reserved.',
+    alerts: [
+      { title: 'UPSC Prelims 2024', date: 'May 26', type: 'High Priority' },
+      { title: 'TNPSC Group 4', date: 'June 09', type: 'Registration Open' },
+      { title: 'SSC CGL 2024', date: 'Tentative', type: 'Notification Soon' },
+    ],
+    resources: [
+      { title: 'UPSC Strategic Syllabus', desc: 'A high-level breakdown of Prelims & Mains with weightage analysis.', icon: BookOpen, content: 'The UPSC Civil Services Examination syllabus is divided into three stages: Preliminary, Main, and Interview. The Preliminary stage consists of two objective-type papers (General Studies I and CSAT). The Main stage consists of nine descriptive papers, including an Essay, four General Studies papers, and two Optional Subject papers. Understanding the weightage of subjects like History, Geography, and Polity is crucial for a targeted preparation strategy.' },
+      { title: 'TNPSC Administration Notes', desc: 'Exclusive insights into Tamil Nadu history and governance.', icon: BookOpen, content: 'Tamil Nadu Administration is a vital part of the TNPSC Group 1 and Group 2 exams. Key topics include the Social Reform Movements in Tamil Nadu, the role of Justice Party, Self-Respect Movement, and the Dravidian Movement. Additionally, understanding the state government schemes, welfare measures, and the socio-economic development of the state is essential for scoring high in the General Studies papers.' },
+      { title: 'The Archive: Solved Papers', desc: 'A curated collection of solved papers from the last decade.', icon: Newspaper, content: 'Practicing previous year question papers is one of the most effective ways to understand the exam pattern and the type of questions asked. Our archive contains solved papers for UPSC CSE and TNPSC Group exams from 2014 to 2023. Each solution is accompanied by a detailed explanation and references to standard textbooks, helping you build a solid foundation.' },
+      { title: 'Monthly Intelligence PDF', desc: 'Synthesized current affairs for elite preparation.', icon: TrendingUp, content: 'Our Monthly Intelligence PDF provides a synthesized summary of national and international events, government schemes, and important appointments. Unlike standard news compilations, we focus on the "Exam Relevance" of each news item, providing background information and potential question angles for both Prelims and Mains.' },
+      { title: 'Elite Mock Tests', desc: 'High-difficulty practice tests for serious aspirants.', icon: Award, content: 'The Elite Mock Test series is designed to challenge your understanding and improve your speed and accuracy. These tests are curated by subject matter experts and follow the latest trends of UPSC and TNPSC exams. Detailed performance analysis and rank tracking help you identify your strengths and weaknesses.' },
+      { title: 'The Interview Protocol', desc: 'Advanced strategies for the final personality test.', icon: MessageSquare, content: 'The personality test is the final hurdle in the journey to becoming a civil servant. Our protocol covers everything from DAF (Detailed Application Form) analysis to mock interviews with retired bureaucrats. We focus on developing your communication skills, ethical reasoning, and situational awareness to help you face the board with confidence.' },
+    ]
+  },
+  ta: {
+    intelligence: 'புலனாய்வு',
+    liveFeed: 'நேரடி ஊட்டம்',
+    vault: 'பெட்டகம்',
+    aiStrategist: 'AI உத்தியாளர்',
+    masterFuture: 'உங்கள் எதிர்கால வாழ்க்கையை மாஸ்டர் செய்யுங்கள்',
+    platformDesc: 'TNPSC மற்றும் UPSC ஆர்வலர்களுக்கான மிகவும் மேம்பட்ட புலனாய்வு தளம். நிகழ்நேர தரவு, AI-உந்துதல் உத்திகள் மற்றும் உயரடுக்கு வளங்கள்.',
+    initializeAi: 'AI உத்தியாளரைத் தொடங்குங்கள்',
+    viewVault: 'பெட்டகத்தைப் பார்க்கவும்',
+    marketTrends: 'சந்தை போக்குகள்',
+    competitionRise: 'போட்டி உயர்வு',
+    dailyStrategist: 'தினசரி உத்தியாளர்',
+    lastUpdated: 'கடைசியாக புதுப்பிக்கப்பட்டது',
+    synthesizing: 'அசல் உள்ளடக்கத்தை உருவாக்குகிறது...',
+    criticalAlerts: 'முக்கிய எச்சரிக்கைகள்',
+    verifiedContent: 'சரிபார்க்கப்பட்ட உள்ளடக்கம்',
+    verifiedDesc: 'இந்தத் தளத்தில் உள்ள அனைத்துத் தகவல்களும் அதிகாரப்பூர்வ அரசாங்க இணையதளங்களில் இருந்து தொகுக்கப்பட்டு எமது AI புலனாய்வு இயந்திரத்தால் சரிபார்க்கப்படுகின்றன.',
+    systemOnline: 'கணினி ஆன்லைனில் உள்ளது',
+    strategizing: 'உத்தி வகுக்கிறது...',
+    chatPlaceholder: 'உங்கள் தேர்வு இலக்குகளை விவரிக்கவும் அல்லது உத்தியைக் கேட்கவும்...',
+    liveIntelligence: 'நேரடி புலனாய்வு',
+    realTimeFeed: 'நிகழ்நேர ஊட்டம்',
+    noAlerts: 'இந்த நேரத்தில் நேரடி எச்சரிக்கைகள் எதுவும் இல்லை',
+    accessIntelligence: 'புலனாய்வை அணுகவும்',
+    globalAccess: 'உலகளாவிய அணுகல்',
+    intelligenceDashboard: 'புலனாய்வு டாஷ்போர்டு',
+    liveExamFeed: 'நேரடி தேர்வு ஊட்டம்',
+    studyVault: 'படிப்பு பெட்டகம்',
+    premiumExamHub: 'பிரீமியம் தேர்வு மையம்',
+    latestNotifications: 'சமீபத்திய அறிவிப்புகள்',
+    strategicAnalysis: 'மூலோபாய பகுப்பாய்வு',
+    expertInsights: 'நிபுணர் நுண்ணறிவு',
+    welcome: 'பிரீமியம் தேர்வு மையத்திற்கு வரவேற்கிறோம். நான் உங்கள் AI உத்தியாளர். இன்று உங்கள் தயாரிப்பை மேம்படுத்த நான் உங்களுக்கு எப்படி உதவுவது?',
+    premiumAccess: 'பிரீமியம் அணுகல் செயலில் உள்ளது',
+    intelligencePlatform: 'புலனாய்வு தளம்',
+    reportTitle: 'நேரடி புலனாய்வு அறிக்கை',
+    source: 'ஆதாரம்',
+    openOriginal: 'அசல் ஆதாரத்தைத் திறக்கவும்',
+    navigation: 'வழிசெலுத்தல்',
+    legal: 'சட்டம்',
+    rights: 'அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.',
+    alerts: [
+      { title: 'UPSC பிரிலிம்ஸ் 2024', date: 'மே 26', type: 'அதிமுக்கியத்துவம்' },
+      { title: 'TNPSC குரூப் 4', date: 'ஜூன் 09', type: 'பதிவு திறக்கப்பட்டுள்ளது' },
+      { title: 'SSC CGL 2024', date: 'தற்காலிகமானது', type: 'விரைவில் அறிவிப்பு' },
+    ],
+    resources: [
+      { title: 'UPSC மூலோபாய பாடத்திட்டம்', desc: 'மதிப்பெண் பகுப்பாய்வுடன் பிரிலிம்ஸ் மற்றும் மெயின்ஸின் உயர்மட்ட முறிவு.', icon: BookOpen, content: 'UPSC சிவில் சர்வீசஸ் தேர்வு பாடத்திட்டம் மூன்று நிலைகளாக பிரிக்கப்பட்டுள்ளது: ஆரம்பம், முதன்மை மற்றும் நேர்காணல். ஆரம்ப நிலை இரண்டு புறநிலை வகை தாள்களைக் கொண்டுள்ளது (பொது ஆய்வுகள் I மற்றும் CSAT). முதன்மை நிலை ஒரு கட்டுரை, நான்கு பொது ஆய்வுகள் தாள்கள் மற்றும் இரண்டு விருப்பப் பாடத் தாள்கள் உட்பட ஒன்பது விளக்கத் தாள்களைக் கொண்டுள்ளது. வரலாறு, புவியியல் மற்றும் அரசியல் போன்ற பாடங்களின் எடையைப் புரிந்துகொள்வது இலக்கு தயாரிப்பு உத்திக்கு முக்கியமானது.' },
+      { title: 'TNPSC நிர்வாகக் குறிப்புகள்', desc: 'தமிழ்நாடு வரலாறு மற்றும் நிர்வாகம் பற்றிய பிரத்யேக நுண்ணறிவு.', icon: BookOpen, content: 'தமிழ்நாடு நிர்வாகம் TNPSC குரூப் 1 மற்றும் குரூப் 2 தேர்வுகளின் முக்கிய பகுதியாகும். முக்கிய தலைப்புகளில் தமிழ்நாட்டின் சமூக சீர்திருத்த இயக்கங்கள், நீதிக்கட்சியின் பங்கு, சுயமரியாதை இயக்கம் மற்றும் திராவிட இயக்கம் ஆகியவை அடங்கும். கூடுதலாக, மாநில அரசு திட்டங்கள், நலத்திட்டங்கள் மற்றும் மாநிலத்தின் சமூக-பொருளாதார வளர்ச்சி ஆகியவற்றைப் புரிந்துகொள்வது பொது ஆய்வுகள் தாள்களில் அதிக மதிப்பெண் பெறுவதற்கு அவசியம்.' },
+      { title: 'காப்பகம்: தீர்க்கப்பட்ட தாள்கள்', desc: 'கடந்த தசாப்தத்தில் தீர்க்கப்பட்ட தாள்களின் தொகுப்பு.', icon: Newspaper, content: 'முந்தைய ஆண்டு வினாத்தாள்களைப் பயிற்சி செய்வது தேர்வு முறை மற்றும் கேட்கப்படும் கேள்விகளின் வகையைப் புரிந்துகொள்வதற்கான மிகச் சிறந்த வழிகளில் ஒன்றாகும். எங்கள் காப்பகத்தில் 2014 முதல் 2023 வரையிலான UPSC CSE மற்றும் TNPSC குரூப் தேர்வுகளுக்கான தீர்க்கப்பட்ட தாள்கள் உள்ளன. ஒவ்வொரு தீர்வும் விரிவான விளக்கம் மற்றும் நிலையான பாடப்புத்தகங்களுக்கான குறிப்புகளுடன் உள்ளது, இது உங்களுக்கு ஒரு உறுதியான அடித்தளத்தை உருவாக்க உதவுகிறது.' },
+      { title: 'மாதாந்திர புலனாய்வு PDF', desc: 'உயரடுக்கு தயாரிப்பிற்கான தொகுக்கப்பட்ட நடப்பு நிகழ்வுகள்.', icon: TrendingUp, content: 'எங்கள் மாதாந்திர புலனாய்வு PDF தேசிய மற்றும் சர்வதேச நிகழ்வுகள், அரசு திட்டங்கள் மற்றும் முக்கிய நியமனங்கள் பற்றிய தொகுக்கப்பட்ட சுருக்கத்தை வழங்குகிறது. நிலையான செய்தித் தொகுப்புகளைப் போலன்றி, ஒவ்வொரு செய்தி உருப்படியின் "தேர்வுத் தொடர்பு" என்பதில் நாங்கள் கவனம் செலுத்துகிறோம், ஆரம்பம் மற்றும் முதன்மைத் தேர்வுகள் இரண்டிற்கும் பின்னணித் தகவல் மற்றும் சாத்தியமான கேள்வி கோணங்களை வழங்குகிறோம்.' },
+      { title: 'எலைட் மாதிரி தேர்வுகள்', desc: 'தீவிர ஆர்வலர்களுக்கான உயர் சிரம பயிற்சி தேர்வுகள்.', icon: Award, content: 'எலைட் மாதிரித் தேர்வுத் தொடர் உங்கள் புரிதலைச் சவாலுக்கு உட்படுத்தவும், உங்கள் வேகம் மற்றும் துல்லியத்தை மேம்படுத்தவும் வடிவமைக்கப்பட்டுள்ளது. இந்தத் தேர்வுகள் பாட நிபுணர்களால் நிர்வகிக்கப்படுகின்றன மற்றும் UPSC மற்றும் TNPSC தேர்வுகளின் சமீபத்திய போக்குகளைப் பின்பற்றுகின்றன. விரிவான செயல்திறன் பகுப்பாய்வு மற்றும் தரவரிசை கண்காணிப்பு உங்கள் பலம் மற்றும் பலவீனங்களை அடையாளம் காண உதவுகிறது.' },
+      { title: 'நேர்காணல் நெறிமுறை', desc: 'இறுதி ஆளுமைத் தேர்வுக்கான மேம்பட்ட உத்திகள்.', icon: MessageSquare, content: 'ஆளுமைத் தேர்வு என்பது ஒரு சிவில் ஊழியராக மாறுவதற்கான பயணத்தின் இறுதித் தடையாகும். எங்கள் நெறிமுறை DAF (விரிவான விண்ணப்பப் படிவம்) பகுப்பாய்வு முதல் ஓய்வுபெற்ற அதிகாரிகளுடனான மாதிரி நேர்காணல்கள் வரை அனைத்தையும் உள்ளடக்கியது. வாரியத்தை நம்பிக்கையுடன் எதிர்கொள்ள உங்களுக்கு உதவ உங்கள் தகவல் தொடர்பு திறன், நெறிமுறை பகுப்பாய்வு மற்றும் சூழ்நிலை விழிப்புணர்வை மேம்படுத்துவதில் நாங்கள் கவனம் செலுத்துகிறோம்.' },
+    ]
+  }
+};
 
 interface Message {
   role: 'user' | 'assistant';
@@ -44,11 +149,19 @@ interface Message {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'notifications' | 'resources' | 'chat'>('dashboard');
+  const [language, setLanguage] = useState<'en' | 'ta'>('en');
+
+  const examTrendData = [
+    { name: language === 'ta' ? 'ஜன' : 'Jan', applicants: 4000, difficulty: 65 },
+    { name: language === 'ta' ? 'பிப்' : 'Feb', applicants: 3000, difficulty: 70 },
+    { name: language === 'ta' ? 'மார்' : 'Mar', applicants: 2000, difficulty: 75 },
+    { name: language === 'ta' ? 'ஏப்' : 'Apr', applicants: 2780, difficulty: 80 },
+    { name: language === 'ta' ? 'மே' : 'May', applicants: 1890, difficulty: 85 },
+    { name: language === 'ta' ? 'ஜூன்' : 'Jun', applicants: 2390, difficulty: 90 },
+  ];
   const [news, setNews] = useState<string>('');
   const [loadingNews, setLoadingNews] = useState(true);
-  const [chatMessages, setChatMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Welcome to the Premium Exam Hub. I am your AI strategist. How can I help you optimize your preparation today?' }
-  ]);
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -58,15 +171,23 @@ export default function App() {
   const [loadingNotifications, setLoadingNotifications] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const t = translations[language];
+
+  useEffect(() => {
+    setChatMessages([
+      { role: 'assistant', content: t.welcome }
+    ]);
+  }, [language]);
+
   useEffect(() => {
     const tabLabels: Record<string, string> = {
-      dashboard: 'Intelligence Dashboard',
-      notifications: 'Live Exam Feed',
-      resources: 'Study Vault',
-      chat: 'AI Strategist'
+      dashboard: t.intelligenceDashboard,
+      notifications: t.liveExamFeed,
+      resources: t.studyVault,
+      chat: t.aiStrategist
     };
-    document.title = `GovExam Elite | ${tabLabels[activeTab] || 'Premium Exam Hub'}`;
-  }, [activeTab]);
+    document.title = `GovExam Elite | ${tabLabels[activeTab] || t.premiumExamHub}`;
+  }, [activeTab, language]);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -74,8 +195,8 @@ export default function App() {
       setLoadingNotifications(true);
       
       const [info, notifications] = await Promise.all([
-        fetchLatestExamInfo("Detailed analysis of TNPSC and UPSC 2024-2025 exam trends and notifications"),
-        import('./services/geminiService').then(m => m.fetchLiveNotifications())
+        fetchLatestExamInfo("Detailed analysis of TNPSC and UPSC 2024-2025 exam trends and notifications", language),
+        import('./services/geminiService').then(m => m.fetchLiveNotifications(language))
       ]);
       
       setNews(info);
@@ -84,7 +205,7 @@ export default function App() {
       setLoadingNotifications(false);
     };
     loadInitialData();
-  }, []);
+  }, [language]);
 
   const handleLinkClick = async (url: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -93,7 +214,7 @@ export default function App() {
     
     // Use the analyzeUrlContent service
     const { analyzeUrlContent } = await import('./services/geminiService');
-    const content = await analyzeUrlContent(url);
+    const content = await analyzeUrlContent(url, language);
     
     setSelectedItem({ type: 'link', data: { url, content } });
     setAnalyzingUrl(false);
@@ -112,16 +233,16 @@ export default function App() {
     setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setIsSending(true);
 
-    const response = await chatWithAssistant(userMsg, []);
+    const response = await chatWithAssistant(userMsg, [], language);
     setChatMessages(prev => [...prev, { role: 'assistant', content: response || "I encountered an error. Please try again." }]);
     setIsSending(false);
   };
 
   const tabs = [
-    { id: 'dashboard', label: 'Intelligence', icon: TrendingUp },
-    { id: 'notifications', label: 'Live Feed', icon: Bell },
-    { id: 'resources', label: 'Vault', icon: BookOpen },
-    { id: 'chat', label: 'AI Strategist', icon: MessageSquare },
+    { id: 'dashboard', label: t.intelligence, icon: TrendingUp },
+    { id: 'notifications', label: t.liveFeed, icon: Bell },
+    { id: 'resources', label: t.vault, icon: BookOpen },
+    { id: 'chat', label: t.aiStrategist, icon: MessageSquare },
   ];
 
   return (
@@ -134,7 +255,7 @@ export default function App() {
           </div>
           <div>
             <h1 className="text-xl font-black tracking-tighter uppercase italic">GovExam <span className="text-emerald-500">Elite</span></h1>
-            <p className="text-[10px] font-bold text-white/40 tracking-[0.2em] uppercase">Intelligence Platform</p>
+            <p className="text-[10px] font-bold text-white/40 tracking-[0.2em] uppercase">{t.intelligencePlatform}</p>
           </div>
         </div>
 
@@ -158,8 +279,28 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10">
+            <button 
+              onClick={() => setLanguage('en')}
+              className={cn(
+                "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                language === 'en' ? "bg-emerald-500 text-black" : "text-white/40 hover:text-white"
+              )}
+            >
+              EN
+            </button>
+            <button 
+              onClick={() => setLanguage('ta')}
+              className={cn(
+                "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                language === 'ta' ? "bg-emerald-500 text-black" : "text-white/40 hover:text-white"
+              )}
+            >
+              தமிழ்
+            </button>
+          </div>
           <button className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-widest text-emerald-400">
-            <Globe size={14} /> Global Access
+            <Globe size={14} /> {t.globalAccess}
           </button>
           <button 
             className="md:hidden p-2 text-white/60"
@@ -223,14 +364,14 @@ export default function App() {
                 <div className="relative z-10 h-full flex flex-col justify-between">
                   <div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-black/20 backdrop-blur-md rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
-                      <Zap size={12} className="text-yellow-400" /> Premium Access Active
+                      <Zap size={12} className="text-yellow-400" /> {t.premiumAccess}
                     </div>
                     <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-6 uppercase italic">
-                      Master Your <br />
-                      <span className="text-emerald-300">Future</span> Career
+                      {t.masterFuture.split(' ').slice(0, 2).join(' ')} <br />
+                      <span className="text-emerald-300">{t.masterFuture.split(' ').slice(2, 3).join(' ')}</span> {t.masterFuture.split(' ').slice(3).join(' ')}
                     </h2>
                     <p className="text-emerald-100/70 max-w-md text-lg font-medium leading-relaxed mb-8">
-                      The most advanced intelligence platform for TNPSC and UPSC aspirants. Real-time data, AI-driven strategies, and elite resources.
+                      {t.platformDesc}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-4">
@@ -238,10 +379,13 @@ export default function App() {
                       onClick={() => setActiveTab('chat')}
                       className="bg-white text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-105 transition-transform flex items-center gap-3"
                     >
-                      Initialize AI Strategist <ChevronRight size={20} />
+                      {t.initializeAi} <ChevronRight size={20} />
                     </button>
-                    <button className="bg-black/20 backdrop-blur-md border border-white/10 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-black/40 transition-all">
-                      View Vault
+                    <button 
+                      onClick={() => setActiveTab('resources')}
+                      className="bg-black/20 backdrop-blur-md border border-white/10 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-black/40 transition-all"
+                    >
+                      {t.viewVault}
                     </button>
                   </div>
                 </div>
@@ -259,7 +403,7 @@ export default function App() {
               <div className="lg:col-span-4 bg-[#151515] rounded-[2.5rem] p-8 border border-white/5 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Market Trends</h3>
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40">{t.marketTrends}</h3>
                     <BarChart3 size={20} className="text-emerald-500" />
                   </div>
                   <div className="h-48 w-full">
@@ -277,8 +421,8 @@ export default function App() {
                   </div>
                 </div>
                 <div className="mt-8">
-                  <p className="text-3xl font-black tracking-tighter italic">+24% <span className="text-sm font-bold text-white/40 not-italic uppercase tracking-widest ml-2">Competition Rise</span></p>
-                  <p className="text-xs text-white/40 mt-2 font-medium">Aggregated from latest government recruitment data.</p>
+                  <p className="text-3xl font-black tracking-tighter italic">+24% <span className="text-sm font-bold text-white/40 not-italic uppercase tracking-widest ml-2">{t.competitionRise}</span></p>
+                  <p className="text-xs text-white/40 mt-2 font-medium">{language === 'ta' ? 'சமீபத்திய அரசு வேலைவாய்ப்பு தரவுகளிலிருந்து தொகுக்கப்பட்டது.' : 'Aggregated from latest government recruitment data.'}</p>
                 </div>
               </div>
 
@@ -288,16 +432,16 @@ export default function App() {
                   <div className="max-w-2xl">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-2 h-2 bg-emerald-600 rounded-full animate-ping" />
-                      <span className="text-xs font-black uppercase tracking-[0.3em] text-emerald-600">Live Intelligence Report</span>
+                      <span className="text-xs font-black uppercase tracking-[0.3em] text-emerald-600">{t.reportTitle}</span>
                     </div>
                     <h3 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-none">
-                      The Daily <br />
-                      <span className="text-gray-400">Strategist</span>
+                      {t.dailyStrategist.split(' ').slice(0, 2).join(' ')} <br />
+                      <span className="text-gray-400">{t.dailyStrategist.split(' ').slice(2).join(' ')}</span>
                     </h3>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Last Updated</p>
-                    <p className="text-xl font-black italic">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t.lastUpdated}</p>
+                    <p className="text-xl font-black italic">{new Date().toLocaleDateString(language === 'ta' ? 'ta-IN' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                   </div>
                 </div>
 
@@ -309,7 +453,7 @@ export default function App() {
                           <Loader2 className="animate-spin text-emerald-600" size={48} />
                           <div className="absolute inset-0 blur-xl bg-emerald-600/20 animate-pulse" />
                         </div>
-                        <p className="text-lg font-black uppercase tracking-widest text-gray-300">Synthesizing Original Content...</p>
+                        <p className="text-lg font-black uppercase tracking-widest text-gray-300">{t.synthesizing}</p>
                       </div>
                     ) : (
                       <div className="prose prose-lg prose-emerald max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:italic prose-p:text-gray-600 prose-p:leading-relaxed">
@@ -337,13 +481,9 @@ export default function App() {
                   <div className="space-y-8">
                     <AdBanner slot="news_sidebar_top" />
                     <div className="p-8 bg-gray-50 rounded-3xl border border-gray-100">
-                      <h4 className="text-xs font-black uppercase tracking-[0.3em] text-gray-400 mb-6">Critical Alerts</h4>
+                      <h4 className="text-xs font-black uppercase tracking-[0.3em] text-gray-400 mb-6">{t.criticalAlerts}</h4>
                       <div className="space-y-6">
-                        {[
-                          { title: 'UPSC Prelims 2024', date: 'May 26', type: 'High Priority' },
-                          { title: 'TNPSC Group 4', date: 'June 09', type: 'Registration Open' },
-                          { title: 'SSC CGL 2024', date: 'Tentative', type: 'Notification Soon' },
-                        ].map((alert, i) => (
+                        {t.alerts.map((alert, i) => (
                           <div key={i} className="group cursor-pointer">
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{alert.type}</span>
@@ -357,9 +497,9 @@ export default function App() {
                     
                     <div className="p-8 bg-emerald-600 rounded-3xl text-white shadow-2xl shadow-emerald-600/20">
                       <ShieldCheck size={32} className="mb-4" />
-                      <h4 className="text-xl font-black uppercase tracking-tighter italic mb-2">Verified Content</h4>
+                      <h4 className="text-xl font-black uppercase tracking-tighter italic mb-2">{t.verifiedContent}</h4>
                       <p className="text-sm text-emerald-100 font-medium leading-relaxed">
-                        All information on this platform is synthesized from official government portals and verified by our AI Intelligence engine.
+                        {t.verifiedDesc}
                       </p>
                     </div>
                   </div>
@@ -382,10 +522,10 @@ export default function App() {
                     <MessageSquare size={24} strokeWidth={2.5} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-black uppercase tracking-tighter italic">AI Strategist <span className="text-emerald-500">v2.0</span></h3>
+                    <h3 className="text-lg font-black uppercase tracking-tighter italic">{t.aiStrategist} <span className="text-emerald-500">v2.0</span></h3>
                     <div className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">System Online</span>
+                      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{t.systemOnline}</span>
                     </div>
                   </div>
                 </div>
@@ -438,7 +578,7 @@ export default function App() {
                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
-                      <span className="text-xs text-white/40 font-black uppercase tracking-widest">Strategizing...</span>
+                      <span className="text-xs text-white/40 font-black uppercase tracking-widest">{t.strategizing}</span>
                     </div>
                   </div>
                 )}
@@ -451,7 +591,7 @@ export default function App() {
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    placeholder="Describe your exam goals or ask for a strategy..."
+                    placeholder={t.chatPlaceholder}
                     className="w-full pl-8 pr-16 py-5 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white/10 transition-all text-sm font-medium"
                   />
                   <button 
@@ -475,10 +615,10 @@ export default function App() {
               className="max-w-4xl mx-auto space-y-6"
             >
               <div className="flex items-center justify-between mb-12">
-                <h2 className="text-5xl font-black uppercase tracking-tighter italic">Live <span className="text-emerald-500">Intelligence</span></h2>
+                <h2 className="text-5xl font-black uppercase tracking-tighter italic">{t.liveIntelligence.split(' ')[0]} <span className="text-emerald-500">{t.liveIntelligence.split(' ')[1]}</span></h2>
                 <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
                   <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Real-time Feed</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">{t.realTimeFeed}</span>
                 </div>
               </div>
               
@@ -486,7 +626,7 @@ export default function App() {
               {loadingNotifications ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
                   <Loader2 className="animate-spin text-emerald-500" size={32} />
-                  <p className="text-xs font-black uppercase tracking-widest text-white/20">Syncing Live Intelligence...</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-white/20">{t.synthesizing}</p>
                 </div>
               ) : liveNotifications.length > 0 ? (
                 liveNotifications.map((notif, i) => (
@@ -526,14 +666,7 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {[
-                { title: 'UPSC Strategic Syllabus', desc: 'A high-level breakdown of Prelims & Mains with weightage analysis.', icon: BookOpen, content: 'The UPSC Civil Services Examination syllabus is divided into three stages: Preliminary, Main, and Interview. The Preliminary stage consists of two objective-type papers (General Studies I and CSAT). The Main stage consists of nine descriptive papers, including an Essay, four General Studies papers, and two Optional Subject papers. Understanding the weightage of subjects like History, Geography, and Polity is crucial for a targeted preparation strategy.' },
-                { title: 'TNPSC Administration Notes', desc: 'Exclusive insights into Tamil Nadu history and governance.', icon: BookOpen, content: 'Tamil Nadu Administration is a vital part of the TNPSC Group 1 and Group 2 exams. Key topics include the Social Reform Movements in Tamil Nadu, the role of Justice Party, Self-Respect Movement, and the Dravidian Movement. Additionally, understanding the state government schemes, welfare measures, and the socio-economic development of the state is essential for scoring high in the General Studies papers.' },
-                { title: 'The Archive: Solved Papers', desc: 'A curated collection of solved papers from the last decade.', icon: Newspaper, content: 'Practicing previous year question papers is one of the most effective ways to understand the exam pattern and the type of questions asked. Our archive contains solved papers for UPSC CSE and TNPSC Group exams from 2014 to 2023. Each solution is accompanied by a detailed explanation and references to standard textbooks, helping you build a solid foundation.' },
-                { title: 'Monthly Intelligence PDF', desc: 'Synthesized current affairs for elite preparation.', icon: TrendingUp, content: 'Our Monthly Intelligence PDF provides a synthesized summary of national and international events, government schemes, and important appointments. Unlike standard news compilations, we focus on the "Exam Relevance" of each news item, providing background information and potential question angles for both Prelims and Mains.' },
-                { title: 'Elite Mock Tests', desc: 'High-difficulty practice tests for serious aspirants.', icon: Award, content: 'The Elite Mock Test series is designed to challenge your understanding and improve your speed and accuracy. These tests are curated by subject matter experts and follow the latest trends of UPSC and TNPSC exams. Detailed performance analysis and rank tracking help you identify your strengths and weaknesses.' },
-                { title: 'The Interview Protocol', desc: 'Advanced strategies for the final personality test.', icon: MessageSquare, content: 'The personality test is the final hurdle in the journey to becoming a civil servant. Our protocol covers everything from DAF (Detailed Application Form) analysis to mock interviews with retired bureaucrats. We focus on developing your communication skills, ethical reasoning, and situational awareness to help you face the board with confidence.' },
-              ].map((res, i) => (
+              {t.resources.map((res, i) => (
                 <div 
                   key={i} 
                   onClick={() => setSelectedItem({ type: 'resource', data: res })}
@@ -547,7 +680,7 @@ export default function App() {
                     <p className="text-sm text-white/40 font-medium leading-relaxed">{res.desc}</p>
                   </div>
                   <div className="flex items-center text-emerald-500 text-[10px] font-black uppercase tracking-[0.3em] group-hover:gap-3 transition-all">
-                    Access Intelligence <ChevronRight size={14} />
+                    {t.accessIntelligence} <ChevronRight size={14} />
                   </div>
                 </div>
               ))}
@@ -625,14 +758,14 @@ export default function App() {
                     </Markdown>
                     {selectedItem.type === 'link' && (
                       <div className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between">
-                        <p className="text-xs font-bold text-white/20 uppercase tracking-widest">Source: {selectedItem.data.url}</p>
+                        <p className="text-xs font-bold text-white/20 uppercase tracking-widest">{t.source}: {selectedItem.data.url}</p>
                         <a 
                           href={selectedItem.data.url} 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-emerald-500 text-xs font-black uppercase tracking-widest hover:gap-3 transition-all"
                         >
-                          Open Original Source <ExternalLink size={14} />
+                          {t.openOriginal} <ExternalLink size={14} />
                         </a>
                       </div>
                     )}
@@ -657,28 +790,28 @@ export default function App() {
               <h2 className="text-2xl font-black uppercase tracking-tighter italic">GovExam <span className="text-emerald-500">Elite</span></h2>
             </div>
             <p className="text-white/40 max-w-sm text-sm font-medium leading-relaxed">
-              The world's most advanced intelligence platform for government exam preparation. Synthesizing real-time data into original, actionable insights.
+              {t.platformDesc}
             </p>
           </div>
           <div>
-            <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Navigation</h5>
+            <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">{t.navigation}</h5>
             <div className="flex flex-col gap-3">
-              {tabs.map(t => (
-                <button key={t.id} onClick={() => setActiveTab(t.id as any)} className="text-sm font-bold text-white/40 hover:text-emerald-500 transition-colors text-left uppercase tracking-widest">{t.label}</button>
+              {tabs.map(tab => (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className="text-sm font-bold text-white/40 hover:text-emerald-500 transition-colors text-left uppercase tracking-widest">{tab.label}</button>
               ))}
             </div>
           </div>
           <div>
-            <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Legal</h5>
+            <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">{t.legal}</h5>
             <div className="flex flex-col gap-3 text-sm font-bold text-white/40 uppercase tracking-widest">
-              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: 'Privacy Protocol', content: PRIVACY_POLICY } })} className="hover:text-emerald-500 transition-colors text-left">Privacy Protocol</button>
-              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: 'Terms of Service', content: TERMS_OF_SERVICE } })} className="hover:text-emerald-500 transition-colors text-left">Terms of Service</button>
-              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: 'Ad Disclosure', content: AD_DISCLOSURE } })} className="hover:text-emerald-500 transition-colors text-left">Ad Disclosure</button>
+              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: language === 'ta' ? 'தனியுரிமை நெறிமுறை' : 'Privacy Protocol', content: PRIVACY_POLICY } })} className="hover:text-emerald-500 transition-colors text-left">{language === 'ta' ? 'தனியுரிமை நெறிமுறை' : 'Privacy Protocol'}</button>
+              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: language === 'ta' ? 'சேவை விதிமுறைகள்' : 'Terms of Service', content: TERMS_OF_SERVICE } })} className="hover:text-emerald-500 transition-colors text-left">{language === 'ta' ? 'சேவை விதிமுறைகள்' : 'Terms of Service'}</button>
+              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: language === 'ta' ? 'விளம்பர வெளிப்பாடு' : 'Ad Disclosure', content: AD_DISCLOSURE } })} className="hover:text-emerald-500 transition-colors text-left">{language === 'ta' ? 'விளம்பர வெளிப்பாடு' : 'Ad Disclosure'}</button>
             </div>
           </div>
         </div>
         <div className="max-w-[1600px] mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">© 2024 GovExam Elite Intelligence. All Rights Reserved.</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">© 2024 GovExam Elite Intelligence. {t.rights}</p>
           <div className="flex items-center gap-6">
             <a href="#" className="text-white/20 hover:text-emerald-500 transition-colors"><Globe size={20} /></a>
             <a href="#" className="text-white/20 hover:text-emerald-500 transition-colors"><ShieldCheck size={20} /></a>
