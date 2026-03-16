@@ -26,6 +26,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { fetchLatestExamInfo, chatWithAssistant } from './services/geminiService';
 import { cn } from './lib/utils';
 import AdBanner from './components/AdBanner';
+import { PRIVACY_POLICY, TERMS_OF_SERVICE, AD_DISCLOSURE } from './legalContent';
 
 const examTrendData = [
   { name: 'Jan', applicants: 4000, difficulty: 65 },
@@ -51,11 +52,21 @@ export default function App() {
   const [inputMessage, setInputMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<{ type: 'notification' | 'resource' | 'link', data: any } | null>(null);
+  const [selectedItem, setSelectedItem] = useState<{ type: 'notification' | 'resource' | 'link' | 'legal', data: any } | null>(null);
   const [analyzingUrl, setAnalyzingUrl] = useState(false);
   const [liveNotifications, setLiveNotifications] = useState<any[]>([]);
   const [loadingNotifications, setLoadingNotifications] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const tabLabels: Record<string, string> = {
+      dashboard: 'Intelligence Dashboard',
+      notifications: 'Live Exam Feed',
+      resources: 'Study Vault',
+      chat: 'AI Strategist'
+    };
+    document.title = `GovExam Elite | ${tabLabels[activeTab] || 'Premium Exam Hub'}`;
+  }, [activeTab]);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -569,6 +580,7 @@ export default function App() {
                   <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-black">
                     {selectedItem.type === 'notification' ? <Bell size={24} /> : 
                      selectedItem.type === 'resource' ? <BookOpen size={24} /> : 
+                     selectedItem.type === 'legal' ? <ShieldCheck size={24} /> :
                      <Globe size={24} />}
                   </div>
                   <div>
@@ -659,9 +671,9 @@ export default function App() {
           <div>
             <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Legal</h5>
             <div className="flex flex-col gap-3 text-sm font-bold text-white/40 uppercase tracking-widest">
-              <a href="#" className="hover:text-emerald-500 transition-colors">Privacy Protocol</a>
-              <a href="#" className="hover:text-emerald-500 transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-emerald-500 transition-colors">Ad Disclosure</a>
+              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: 'Privacy Protocol', content: PRIVACY_POLICY } })} className="hover:text-emerald-500 transition-colors text-left">Privacy Protocol</button>
+              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: 'Terms of Service', content: TERMS_OF_SERVICE } })} className="hover:text-emerald-500 transition-colors text-left">Terms of Service</button>
+              <button onClick={() => setSelectedItem({ type: 'legal', data: { title: 'Ad Disclosure', content: AD_DISCLOSURE } })} className="hover:text-emerald-500 transition-colors text-left">Ad Disclosure</button>
             </div>
           </div>
         </div>
