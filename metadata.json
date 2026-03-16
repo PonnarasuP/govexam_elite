@@ -1,0 +1,5 @@
+{
+  "name": "GovExam Hub",
+  "description": "A dynamic aggregator for TNPSC, UPSC, and other government exam information, featuring real-time notifications, current affairs, and AI-powered exam guidance.",
+  "requestFramePermissions": []
+}
